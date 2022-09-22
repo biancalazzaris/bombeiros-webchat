@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bombeiros WebSocket</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <div class="container-fluid d-flex justify-content-center align-items-center">
+        <div class="col-md-4 col-md-offset-4">
+            <img src="/app/public/images/logo.jpg" alt="">
+            <h2>Olá, bombeiro (a)</h2>
+                <form 
+                accept-charset="UTF-8"
+                class="form "
+                action="/chat"
+                method="post">
+                <fieldset>
+                    <label class="panel-login">
+                        <div class="login_result"></div>
+                    </label>
+                    <input 
+                        class="form-control mb-2" 
+                        placeholder="E-mail ou usuário" 
+                        id="username" 
+                        type="text">
+                    
+                    <input 
+                        class="form-control" 
+                        placeholder="Senha" 
+                        id="senha" 
+                        name="senha"
+                        type="password">
+                    </br>
+                    <input 
+                        class="btn btn-lg btn-success btn-block" 
+                        type="submit" 
+                        id="entrar" 
+                        value="Entrar »">
+                </fieldset>
+            </form>
+            </div>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const SERVER_URL = 'http://localhost:5000';
+        const socket = io(SERVER_URL);
+
+        function enviar(){
+            const userField = document.getElementById('username');
+            const messageField = document.getElementById('mensagem');
+
+            const usuario = userField.value;
+            const message = messageField.value;
+
+            socket.emit('iniciaChat', {usuario, message});
+        }
+
+        socket.on('showMessage', (xpto) => {
+            const chatScreen = document.getElementById('chat');
+            const p = document.createElement('p');
+            p.innerHTML = `User: ${xpto.usuario}<br> Mensagem: ${xpto.message}`;
+            chatScreen.append(p);
+        });
+
+    </script>
+</body>
+</html>
